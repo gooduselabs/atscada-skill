@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{__GUID__}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>__NS__</RootNamespace>
+    <AssemblyName>__NS__</AssemblyName>
+    <TargetFrameworkVersion>__FRAMEWORK__</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <!-- Install folders of ATSCADA and ATDriver Server. Override on another machine:  msbuild /p:ATSCADADir="D:\ATPro\ATSCADA" -->
+    <ATSCADADir Condition=" '$(ATSCADADir)' == '' ">C:\Program Files\ATPro\ATSCADA</ATSCADADir>
+    <ATDriverServerDir Condition=" '$(ATDriverServerDir)' == '' ">C:\Program Files\ATPro\ATDriverServer</ATDriverServerDir>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>true</Prefer32Bit>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <Prefer32Bit>true</Prefer32Bit>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="iDriver">
+      <HintPath>$(ATSCADADir)\iDriver.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="iTools">
+      <HintPath>$(ATSCADADir)\iTools.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="iWebService">
+      <HintPath>$(ATSCADADir)\iWebService.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DriverPluginInterface">
+      <HintPath>$(ATSCADADir)\DriverPluginInterface.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ToolExtensions">
+      <HintPath>$(ATSCADADir)\ToolExtensions.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MySql.Data">
+      <HintPath>$(ATSCADADir)\MySql.Data.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Loggers.g.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model.g.cs" />
+    <Compile Include="Database.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <Content Include="Tag_file.XML">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <!-- iDriver loads the ATDriver client from a "Drivers" folder next to the exe. The three files are taken straight
+         from the install folders, so nothing binary has to be copied into the project. -->
+    <Content Include="$(ATDriverServerDir)\ATDriverBase.dll">
+      <Link>Drivers\ATDriverBase.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(ATSCADADir)\Drivers\ATDriverClient.dll">
+      <Link>Drivers\ATDriverClient.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="$(ATDriverServerDir)\ATDriverWCFInterface.dll">
+      <Link>Drivers\ATDriverWCFInterface.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
